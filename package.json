@@ -10,6 +10,9 @@
   "author": "Bolarinwa Ahmed and Node.js August Cohort Members",
   "license": "ISC",
   "dependencies": {
-    "express": "^4.19.2"
+    "dotenv": "^16.4.5",
+    "express": "^4.19.2",
+    "mongoose": "^8.5.4",
+    "morgan": "^1.10.0"
   }
 }

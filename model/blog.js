@@ -1,24 +1,29 @@
-const blogs = [
-  {
-    id: 1,
-    title: "Blog 1",
-    content: "Content 1",
-  },
-  {
-    id: 2,
-    title: "Blog 2",
-    content: "Content 2",
-  },
-  {
-    id: 3,
-    title: "Blog 3",
-    content: "Content 3",
-  },
-  {
-    id: 4,
-    title: "Blog 4",
-    content: "Content 4",
-  },
-];
+const mongoose = require("mongoose");
 
-module.exports = blogs;
+// Define the schema
+const blogSchema = new mongoose.Schema({
+  title: {
+    type: String,
+    required: [true, "Title is required"],
+    unique: [true, "A blog with this title already exists"],
+    minLength: 5,
+  },
+  description: {
+    type: String,
+    required: [true, "Description is required"],
+  },
+  content: {
+    type: String,
+    required: [true, "Content is required"],
+  },
+  likes: {
+    type: Number,
+    default: 0,
+    min: 0,
+  },
+});
+
+// Creating a model
+const Blog = mongoose.model("Blog", blogSchema);
+
+module.exports = Blog;

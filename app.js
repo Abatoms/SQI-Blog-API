@@ -1,6 +1,7 @@
 const express = require("express");
 const morgan = require("morgan");
 const blogRoutes = require("./routes/blog");
+const userRoutes = require("./routes/user");
 const app = express();
 
 app.use(express.json());
@@ -25,5 +26,6 @@ app.get("/api/v1", (req, res) => {
 });
 
 app.use("/api/v1/blogs", blogRoutes);
+app.use("/api/v1/users", userRoutes);
 
 module.exports = app;

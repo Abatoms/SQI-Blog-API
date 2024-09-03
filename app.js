@@ -1,12 +1,18 @@
 const express = require("express");
 const morgan = require("morgan");
+const cors = require("cors");
 const blogRoutes = require("./routes/blog");
+const logSomethingToTheConsole = require("./middlewares/logger");
 const userRoutes = require("./routes/user");
 const app = express();
 
 app.use(express.json());
 
 app.use(morgan("dev"));
+app.use(cors("*"));
+
+// Custom middleware
+app.use(logSomethingToTheConsole);
 
 const appName = process.env.APP_NAME;
 console.log(appName);

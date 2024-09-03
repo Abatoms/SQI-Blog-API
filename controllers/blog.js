@@ -1,8 +1,9 @@
+
 const Blogs = require("./../model/blog");
 
 const getAllBlogs = async (req, res) => {
   try {
-    const blogs = await Blogs.find();
+    const blogs = await Blogs.find().populate("user");
     res.status(200).json({
       status: "success",
       message: "All blogs gotten successfully",
@@ -22,7 +23,7 @@ const getSingleBlog = async (req, res) => {
     const id = req.params.id;
     console.log(id);
 
-    const blog = await Blogs.findById(id);
+    const blog = await Blogs.findById(id).populate("user");
 
     if (!blog) {
       throw new Error("Blog not found");
@@ -45,17 +46,18 @@ const createNewBlog = async (req, res) => {
   try {
     console.log(req.body);
     // Get title and content from the request body
-    const { title, content, description } = req.body;
+    const { title, content, description, user } = req.body;
 
     // Check if title and content are provided
-    if (!title || !content || !description) {
-      throw new Error("Title, content, and description are required");
+    if (!title || !content || !description || !user) {
+      throw new Error("Title, content, and description, and user are required");
     }
     // Create a new Blog
     const newBlog = await Blogs.create({
       title,
       content,
       description,
+      user,
     });
 
     if (!newBlog) {

@@ -6,8 +6,10 @@ const {
   updateBlog,
   deleteBlog,
 } = require("./../controllers/blog");
+const blogAlat = require("./../middlewares/blogAlat");
 const router = express.Router();
 
+router.use(blogAlat);
 // path /blogs/
 router.get("/", getAllBlogs);
 

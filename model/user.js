@@ -33,6 +33,11 @@ const userSchema = new mongoose.Schema({
   phone_number: {
     type: String,
   },
+
+  email_verified: {
+    type: Boolean,
+    default: false,
+  },
 });
 
 const Users = mongoose.model("Users", userSchema);

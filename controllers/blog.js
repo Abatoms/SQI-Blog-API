@@ -1,4 +1,3 @@
-
 const Blogs = require("./../model/blog");
 
 const getAllBlogs = async (req, res) => {
@@ -46,18 +45,19 @@ const createNewBlog = async (req, res) => {
   try {
     console.log(req.body);
     // Get title and content from the request body
-    const { title, content, description, user } = req.body;
+    const { title, content, description } = req.body;
+    const userId = req.user.id;
 
     // Check if title and content are provided
-    if (!title || !content || !description || !user) {
-      throw new Error("Title, content, and description, and user are required");
+    if (!title || !content || !description) {
+      throw new Error("Title, content, and description, are required");
     }
     // Create a new Blog
     const newBlog = await Blogs.create({
       title,
       content,
       description,
-      user,
+      user: userId,
     });
 
     if (!newBlog) {

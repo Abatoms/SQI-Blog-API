@@ -13,7 +13,7 @@ app.use(morgan("dev"));
 app.use(cors("*"));
 
 // Custom middleware
-app.use(logSomethingToTheConsole);
+// app.use(logSomethingToTheConsole);
 
 const appName = process.env.APP_NAME;
 console.log(appName);

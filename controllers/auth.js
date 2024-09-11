@@ -103,7 +103,7 @@ const login = async (req, res) => {
   }
 };
 
-// Verify email adress
+// Verify email address
 
 // forgot password
 

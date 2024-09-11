@@ -7,9 +7,10 @@ const {
   deleteBlog,
 } = require("./../controllers/blog");
 const blogAlat = require("./../middlewares/blogAlat");
+const protectRoute = require("./../middlewares/auth");
 const router = express.Router();
 
-router.use(blogAlat);
+// router.use(blogAlat);
 // path /blogs/
 router.get("/", getAllBlogs);
 
@@ -17,7 +18,7 @@ router.get("/", getAllBlogs);
 router.get("/:id", getSingleBlog);
 
 // path /blogs, method post
-router.post("/", createNewBlog);
+router.post("/", protectRoute, createNewBlog);
 
 // path /blogs/:id, method patch
 router.patch("/:id", updateBlog);

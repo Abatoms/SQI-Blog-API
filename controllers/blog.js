@@ -1,6 +1,7 @@
+const AppError = require("../utils/AppError");
 const Blogs = require("./../model/blog");
 
-const getAllBlogs = async (req, res) => {
+const getAllBlogs = async (req, res, next) => {
   try {
     const blogs = await Blogs.find().populate("user");
     res.status(200).json({
@@ -10,14 +11,11 @@ const getAllBlogs = async (req, res) => {
       data: blogs,
     });
   } catch (error) {
-    res.status(400).json({
-      status: "fail",
-      message: error.message,
-    });
+    next(error);
   }
 };
 
-const getSingleBlog = async (req, res) => {
+const getSingleBlog = async (req, res, next) => {
   try {
     const id = req.params.id;
     console.log(id);
@@ -25,7 +23,7 @@ const getSingleBlog = async (req, res) => {
     const blog = await Blogs.findById(id).populate("user");
 
     if (!blog) {
-      throw new Error("Blog not found");
+      throw new AppError("Blog not found", 404);
     }
 
     res.status(200).json({
@@ -34,23 +32,20 @@ const getSingleBlog = async (req, res) => {
       data: blog,
     });
   } catch (error) {
-    res.status(400).json({
-      status: "fail",
-      message: error.message,
-    });
+    next(error);
   }
 };
 
-const createNewBlog = async (req, res) => {
+const createNewBlog = async (req, res, next) => {
   try {
-    console.log(req.body);
+    // console.log(req.body);
     // Get title and content from the request body
     const { title, content, description } = req.body;
     const userId = req.user.id;
 
     // Check if title and content are provided
     if (!title || !content || !description) {
-      throw new Error("Title, content, and description, are required");
+      throw new AppError("Title, content, and description, are required", 400);
     }
     // Create a new Blog
     const newBlog = await Blogs.create({
@@ -61,7 +56,7 @@ const createNewBlog = async (req, res) => {
     });
 
     if (!newBlog) {
-      throw new Error("Failed to create a new blog");
+      throw new AppError("Failed to create a new blog", 404);
     }
 
     res.status(201).json({
@@ -70,15 +65,11 @@ const createNewBlog = async (req, res) => {
       data: newBlog,
     });
   } catch (error) {
-    console.log(error);
-    res.status(400).json({
-      status: "fail",
-      message: error.message,
-    });
+    next(error);
   }
 };
 
-const updateBlog = async (req, res) => {
+const updateBlog = async (req, res, next) => {
   try {
     const id = req.params.id;
 
@@ -93,10 +84,7 @@ const updateBlog = async (req, res) => {
       data: updatedBlog,
     });
   } catch (error) {
-    res.status(400).json({
-      status: "fail",
-      message: error.message,
-    });
+    next(error);
   }
 };
 
@@ -111,10 +99,7 @@ const deleteBlog = async (req, res) => {
       message: "Blog deleted successfully",
     });
   } catch (error) {
-    res.status(400).json({
-      status: "fail",
-      message: error.message,
-    });
+    next(error);
   }
 };
 

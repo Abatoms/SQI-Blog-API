@@ -1,6 +1,8 @@
 const express = require("express");
 const morgan = require("morgan");
 const cors = require("cors");
+const errorHandler = require("./middlewares/error");
+const AppError = require("./utils/AppError");
 const blogRoutes = require("./routes/blog");
 const logSomethingToTheConsole = require("./middlewares/logger");
 const userRoutes = require("./routes/user");
@@ -37,9 +39,16 @@ app.use("/api/v1/users", userRoutes);
 app.use("/api/v1/auth", authRoutes);
 
 app.all("*", (req, res) => {
+  const message = new AppError(
+    `Can't find ${req.originalUrl} with method ${req.method} on this server`
+  );
   res.status(404).json({
     status: "error",
-    message: `Can't find ${req.originalUrl} with method ${req.method} on this server`,
+    message: message,
   });
 });
+
+// Global Error Handler
+app.use(errorHandler);
+
 module.exports = app;

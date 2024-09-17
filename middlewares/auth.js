@@ -1,5 +1,6 @@
 const jwt = require("jsonwebtoken");
 const Users = require("../model/user");
+const AppError = require("./../utils/AppError");
 const protectRoute = async (req, res, next) => {
   try {
     let token = "";
@@ -11,24 +12,30 @@ const protectRoute = async (req, res, next) => {
       token = req.headers.authorization.split(" ")[1];
     }
 
-    console.log(token);
+    // console.log(token);
     // Check if token exists
     if (!token) {
-      throw new Error("Ptlease login to access this roue");
+      throw new AppError("Ptlease login to access this route", 401);
     }
 
     // verify the token
     const jwtSecret = process.env.jwtSecret;
     const decoded = jwt.verify(token, jwtSecret);
-    console.log(decoded);
+    // console.log(decoded);
 
     if (!decoded) {
-      throw new Error("Invalid token supplied, please login again to continue");
+      throw new AppError(
+        "Invalid token supplied, please login again to continue",
+        401
+      );
     }
 
     // Check if the jwt has expired
     if (decoded.exp > Date.now()) {
-      throw new Error("Token has expired, please login again to continue");
+      throw new AppError(
+        "Token has expired, please login again to continue",
+        401
+      );
     }
 
     const userId = decoded.id;
@@ -37,8 +44,9 @@ const protectRoute = async (req, res, next) => {
     const user = await Users.findById(userId);
 
     if (!user) {
-      throw new Error(
-        "Invalid user for the token supplied, please login again to continue"
+      throw new AppError(
+        "Invalid user for the token supplied, please login again to continue",
+        404
       );
     }
 
@@ -46,10 +54,7 @@ const protectRoute = async (req, res, next) => {
     req.user = user;
     next();
   } catch (error) {
-    res.status(400).json({
-      status: "fail",
-      message: error.message,
-    });
+    next(error);
   }
 };
 

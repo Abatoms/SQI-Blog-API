@@ -1,6 +1,6 @@
 const Users = require("./../model/user");
-
-const getAllUsers = async (req, res) => {
+const AppError = require("./../utils/AppError");
+const getAllUsers = async (req, res, next) => {
   try {
     const users = await Users.find();
     res.status(200).json({
@@ -10,14 +10,11 @@ const getAllUsers = async (req, res) => {
       data: users,
     });
   } catch (error) {
-    res.status(400).json({
-      status: "fail",
-      message: error.message,
-    });
+    next(error);
   }
 };
 
-const getSingleUser = async (req, res) => {
+const getSingleUser = async (req, res, next) => {
   try {
     const id = req.params.id;
     console.log(id);
@@ -25,7 +22,7 @@ const getSingleUser = async (req, res) => {
     const user = await Users.findById(id);
 
     if (!user) {
-      throw new Error("user not found");
+      throw new AppError("user not found", 404);
     }
 
     res.status(200).json({
@@ -34,21 +31,18 @@ const getSingleUser = async (req, res) => {
       data: user,
     });
   } catch (error) {
-    res.status(400).json({
-      status: "fail",
-      message: error.message,
-    });
+    next(error);
   }
 };
 
-const createNewUser = async (req, res) => {
+const createNewUser = async (req, res, next) => {
   try {
     console.log(req.body);
     const { email, firstname, lastname, password, bio, phone_number } =
       req.body;
 
     if (!email || !firstname || !lastname || !password) {
-      throw new Error("Please fill in all required fields");
+      throw new AppError("Please fill in all required fields", 400);
     }
     // Create a new User
     const newUser = await Users.create({
@@ -61,7 +55,7 @@ const createNewUser = async (req, res) => {
     });
 
     if (!newUser) {
-      throw new Error("Failed to create a new User");
+      throw new AppError("Failed to create a new User", 404);
     }
 
     res.status(201).json({
@@ -70,15 +64,11 @@ const createNewUser = async (req, res) => {
       data: newUser,
     });
   } catch (error) {
-    console.log(error);
-    res.status(400).json({
-      status: "fail",
-      message: error.message,
-    });
+    next(error);
   }
 };
 
-const updateUser = async (req, res) => {
+const updateUser = async (req, res, next) => {
   try {
     const id = req.params.id;
 
@@ -93,14 +83,11 @@ const updateUser = async (req, res) => {
       data: updatedUser,
     });
   } catch (error) {
-    res.status(400).json({
-      status: "fail",
-      message: error.message,
-    });
+    next(error);
   }
 };
 
-const deleteUser = async (req, res) => {
+const deleteUser = async (req, res, next) => {
   try {
     const id = req.params.id;
 
@@ -111,10 +98,7 @@ const deleteUser = async (req, res) => {
       message: "User deleted successfully",
     });
   } catch (error) {
-    res.status(400).json({
-      status: "fail",
-      message: error.message,
-    });
+    next(error);
   }
 };
 

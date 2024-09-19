@@ -43,10 +43,10 @@ const createNewBlog = async (req, res, next) => {
     const { title, content, description } = req.body;
     const userId = req.user.id;
 
-    // Check if title and content are provided
-    if (!title || !content || !description) {
-      throw new AppError("Title, content, and description, are required", 400);
-    }
+    // // Check if title and content are provided
+    // if (!title || !content || !description) {
+    //   throw new AppError("Title, content, and description, are required", 400);
+    // }
     // Create a new Blog
     const newBlog = await Blogs.create({
       title,

@@ -1,5 +1,7 @@
 const AppError = require("../utils/AppError");
 const Blogs = require("./../model/blog");
+const { dataUri } = require("./../utils/multer");
+const { uploader } = require("./../config/cloudinary");
 
 const getAllBlogs = async (req, res, next) => {
   try {
@@ -43,6 +45,21 @@ const createNewBlog = async (req, res, next) => {
     const { title, content, description } = req.body;
     const userId = req.user.id;
 
+    if (!req.file) {
+      throw new AppError("Please upload an image for the blog", 400);
+    }
+    console.log(req.file);
+    const imageData = dataUri(req).content;
+    console.log(imageData);
+
+    const result = await uploader.upload(imageData, {
+      folder: "SQIBlogga/BlogImages",
+      secure: true,
+      use_filename: true,
+    });
+
+    console.log(result);
+
     // // Check if title and content are provided
     // if (!title || !content || !description) {
     //   throw new AppError("Title, content, and description, are required", 400);
@@ -53,6 +70,7 @@ const createNewBlog = async (req, res, next) => {
       content,
       description,
       user: userId,
+      image: result.secure_url,
     });
 
     if (!newBlog) {

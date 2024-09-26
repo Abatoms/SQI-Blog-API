@@ -2,6 +2,7 @@ const Users = require("./../model/user");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const AppError = require("./../utils/AppError");
+const sendEmail = require("./../utils/email");
 
 const register = async (req, res, next) => {
   try {
@@ -37,7 +38,14 @@ const register = async (req, res, next) => {
     const token = jwt.sign({ id: newUser._id }, jwtSecret, {
       expiresIn: jwtExpiresIn,
     });
-    console.log(token);
+    // console.log(token);
+
+    await sendEmail({
+      email: email,
+      subject: "Welcome to SQI Blogga",
+      message:
+        "Welcome to our very beautiful and informative blogging website. We are pleased tohave you, or not. ",
+    });
 
     // Send response
     res.status(201).json({

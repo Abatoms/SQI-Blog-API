@@ -1,6 +1,7 @@
 const express = require("express");
 const morgan = require("morgan");
 const cors = require("cors");
+const { cloudinaryConfig } = require("./config/cloudinary");
 const errorHandler = require("./middlewares/error");
 const AppError = require("./utils/AppError");
 const blogRoutes = require("./routes/blog");
@@ -10,13 +11,15 @@ const authRoutes = require("./routes/auth");
 const app = express();
 
 app.use(express.json());
+// allows you to send form data in express
+app.use(express.urlencoded({ extended: true }));
 
 app.use(morgan("dev"));
 app.use(cors("*"));
+app.use("*", cloudinaryConfig);
 
 // Custom middleware
 // app.use(logSomethingToTheConsole);
-
 const appName = process.env.APP_NAME;
 console.log(appName);
 

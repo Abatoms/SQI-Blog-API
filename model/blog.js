@@ -26,6 +26,9 @@ const blogSchema = new mongoose.Schema({
     ref: "Users",
     required: [true],
   },
+  image: {
+    type: String,
+  },
 });
 
 // Creating a model

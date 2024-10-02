@@ -7,7 +7,10 @@ const {
   deleteBlog,
 } = require("./../controllers/blog");
 const blogAlat = require("./../middlewares/blogAlat");
-const protectRoute = require("./../middlewares/auth");
+const {
+  protectRoute,
+  checkIfEmailIsVerified,
+} = require("./../middlewares/auth");
 const { imageUpload } = require("./../utils/multer");
 const router = express.Router();
 
@@ -19,7 +22,13 @@ router.get("/", getAllBlogs);
 router.get("/:id", getSingleBlog);
 
 // path /blogs, method post
-router.post("/", protectRoute, imageUpload.single("image"), createNewBlog);
+router.post(
+  "/",
+  protectRoute,
+  checkIfEmailIsVerified,
+  imageUpload.single("image"),
+  createNewBlog
+);
 
 // path /blogs/:id, method patch
 router.patch("/:id", updateBlog);

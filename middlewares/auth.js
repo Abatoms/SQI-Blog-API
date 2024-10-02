@@ -58,4 +58,19 @@ const protectRoute = async (req, res, next) => {
   }
 };
 
-module.exports = protectRoute;
+const checkIfEmailIsVerified = async (req, res, next) => {
+  try {
+    const user = req.user;
+    if (!user.email_verified) {
+      throw new AppError(
+        "Please verify your email address to access this route",
+        401
+      );
+    }
+    next();
+  } catch (error) {
+    next(error);
+  }
+};
+
+module.exports = { protectRoute, checkIfEmailIsVerified };

@@ -38,6 +38,10 @@ const userSchema = new mongoose.Schema({
     type: Boolean,
     default: false,
   },
+
+  verification_token: {
+    type: String,
+  },
 });
 
 const Users = mongoose.model("Users", userSchema);
